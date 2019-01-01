@@ -1,13 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-// in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
-// detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
-
 Vue.use(Router)
 
 /* Layout */
-import Layout from '../views/layout/Layout'
+import Layout from '@/views/layout/Layout'
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -22,19 +19,154 @@ import Layout from '../views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-  { path: '/login', component: () => import('@/views/login/index'), hidden: true },
-  { path: '/404', component: () => import('@/views/404'), hidden: true },
+  //系统页面
+  // {
+  //   path: '/redirect',
+  //   component: Layout,
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: '/redirect/:path*',
+  //       component: () => import('@/views/redirect/index')
+  //     }
+  //   ]
+  // },
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
+  // {
+  //   path: '/auth-redirect',
+  //   component: () => import('@/views/login/authredirect'),
+  //   hidden: true
+  // },
+  {
+    path: '/404',
+    component: () => import('@/views/errorPage/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/errorPage/401'),
+    hidden: true
+  },
+
+
+
+  //首页
+  {
+    path: '',
+    component: Layout,
+    redirect: 'dashboard',
+    name: 'dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: 'Dashboard',
+        meta: { title: '首页', icon: 'dashboard', noCache: true }
+      }
+    ]
+  },
 
   {
-    path: '/',
+    path: '/SubjectKnowledgeBase',
     component: Layout,
-    redirect: '/dashboard',
-    name: 'Dashboard',
-    hidden: true,
-    children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
-    }]
+    redirect: '/SubjectKnowledgeBase/querySubject',
+    name: 'Subject',
+    meta: { title: '题目知识库', icon: 'table' },
+    children: [
+      {
+        path: 'querySubject',
+        name: 'QuerySubject',
+        component: () => import('@/views/querySubject/index'),
+        meta: { title: '知识库信息列表'}
+      },
+      {
+        path: 'subjectAdd',
+        name: 'subjectAdd',
+        component: () => import('@/views/subjectAdd/index'),
+        meta: { title: '入库题目'}
+      },
+      {
+        path: 'subjectStatistics',
+        name: 'SubjectStatistics',
+        component: () => import('@/views/subjectStatistics/index'),
+        meta: { title: '知识库统计'}
+      }
+    ]
+  },
+  {
+    path: '/TagBase',
+    component: Layout,
+    redirect: '/TagBase/queryTag',
+    name: 'Tag',
+    meta: { title: "标签库", icon: 'clipboard' },
+    children: [
+      {
+        path: 'queryTag',
+        name: 'QueryTag',
+        component: () => import('@/views/queryTag/index'),
+        meta: { title: '标签信息列表'}
+      },
+      {
+        path: 'configureTag',
+        name: 'ConfigureTag',
+        component: () => import('@/views/configureTag/index'),
+        meta: { title: '标签配置'}
+      },
+      {
+        path: 'tagStatistics',
+        name: 'TagStatistics',
+        component: () => import('@/views/tagStatistics/index'),
+        meta: { title: '标签统计'}
+      }
+    ]
+  },
+
+  {
+    path: '/Examination',
+    component: Layout,
+    redirect: '/Examination/queryExamination',
+    name: 'Examination',
+    meta: { title: "试卷库", icon: 'documentation' },
+    children: [
+      {
+        path: 'queryExamination',
+        name: 'QueryExamination',
+        component: () => import('@/views/queryExamination/index'),
+        meta: { title: '试卷信息列表'}
+      },
+      {
+        path: 'generatingExamination',
+        name: 'GeneratingExamination',
+        component: () => import('@/views/generatingExamination/index'),
+        meta: { title: '生成试卷'}
+      },
+      {
+        path: 'examinationStatistics',
+        name: 'ExaminationStatistics',
+        component: () => import('@/views/examinationStatistics/index'),
+        meta: { title: '试卷统计'}
+      }
+    ]
+  },
+
+  {
+    path: '/Authority',
+    component: Layout,
+    redirect: '/Authority/queryAuthority',
+    name: 'Authority',
+    meta: { title: "权限管理", icon: 'user' },
+    children: [
+      {
+        path: 'queryAuthority',
+        name: 'QueryAuthority',
+        component: () => import('@/views/queryAuthority/index'),
+        meta: { title: '权限信息列表'}
+      }
+    ]
   },
 
   {
@@ -42,7 +174,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    meta: { title: '文本处理实力', icon: 'example' },
     children: [
       {
         path: 'table',
@@ -55,6 +187,12 @@ export const constantRouterMap = [
         name: 'Tree',
         component: () => import('@/views/tree/index'),
         meta: { title: 'Tree', icon: 'tree' }
+      },
+      {
+        path: 'examination',
+        name: 'Examination',
+        component: () => import('@/views/examination/index'),
+        meta: { title: 'Examination', icon: 'form' }
       }
     ]
   },
